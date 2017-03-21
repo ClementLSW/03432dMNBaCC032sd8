@@ -20,12 +20,7 @@ public class MainScript : MonoBehaviour {
 
 	public void changePage(int pageNo)
 	{
-		pageList[0].SetActive(false);
-		pageList[1].SetActive(false);
-		pageList[2].SetActive(false);
-		pageList[7].SetActive(false);
-		pageList[8].SetActive(false);
-		pageList[9].SetActive(false);
+		offScreen();
 
 		switch(pageNo)
 		{
@@ -55,8 +50,7 @@ public class MainScript : MonoBehaviour {
 
 	public void changeServicesPage (int pageNo)
 	{
-		for (int i = 2; i< 7; ++i)
-			pageList[i].SetActive(false);
+		offScreen();
 
 		switch(pageNo)
 		{
@@ -83,5 +77,11 @@ public class MainScript : MonoBehaviour {
 			pageList[i].SetActive(false);
 		pageList[0].SetActive(true);
 		pageList[11].GetComponent<Text>().text = "Hammer Studio";
+	}
+
+	public void offScreen()
+	{
+		for (int i = 0; i< 9; ++i)
+			pageList[i].SetActive(false);
 	}
 }
