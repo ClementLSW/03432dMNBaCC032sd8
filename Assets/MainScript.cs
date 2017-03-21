@@ -146,6 +146,12 @@ public class MainScript : MonoBehaviour {
 		case 3:
 			Application.OpenURL("https://sg.linkedin.com/in/hammer-studio-509039131/");
 		break;
+		case 4:
+
+		break;
+		case 5:
+			Application.OpenURL("https://www.youtube.com");
+		break;
 		}
 	}
 
