@@ -140,6 +140,8 @@ public class GallerySwipe : MonoBehaviour {
         isSwiping = true;
         lerpingToNearestGallery = false;
         fastScroll = false;
+
+        Debug.Log("A");
     }
 
     public void endGallerySwipe()
