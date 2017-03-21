@@ -140,8 +140,8 @@ public class MainScript : MonoBehaviour {
     public void navigationSlide()
 	{
 		//true = in, false = out
-		pageList [10].GetComponent<Animator> ().Play (dir?"Navigation Slide In":"Navigation Slide Out");
-		pageList[12].GetComponent<Image>().sprite = dir? back:burger;
+		pageList [9].GetComponent<Animator> ().Play (dir?"Navigation Slide In":"Navigation Slide Out");
+		pageList[11].GetComponent<Image>().sprite = dir? back:burger;
 		dir = !dir;
 	}
 
@@ -153,23 +153,23 @@ public class MainScript : MonoBehaviour {
 		{
 		case 0:
 			pageList[1].SetActive(true);
-			pageList[11].GetComponent<Text>().text = "Company";
+			pageList[10].GetComponent<Text>().text = "Company";
 			break;
 		case 1:
 			pageList[2].SetActive(true);
-			pageList[11].GetComponent<Text>().text = "Services";
+			pageList[10].GetComponent<Text>().text = "Services";
 			break;
 		case 2:
-			pageList[7].SetActive(true);
-			pageList[11].GetComponent<Text>().text = "Portfolio";
+			pageList[6].SetActive(true);
+			pageList[10].GetComponent<Text>().text = "Portfolio";
 			break;
 		case 3:
-			pageList[8].SetActive(true);
-			pageList[11].GetComponent<Text>().text = "AR and VR";
+			pageList[7].SetActive(true);
+			pageList[10].GetComponent<Text>().text = "AR and VR";
 			break;
 		case 4:
-			pageList[9].SetActive(true);
-			pageList[11].GetComponent<Text>().text = "Contact us";
+			pageList[8].SetActive(true);
+			pageList[10].GetComponent<Text>().text = "Contact us";
 			break;
 		}
 		navigationSlide();
@@ -200,15 +200,14 @@ public class MainScript : MonoBehaviour {
 	{
 		if (pageList[0].activeSelf)
 			return;
-		for (int i = 1; i< 10; ++i)
-			pageList[i].SetActive(false);
+		offScreen();
 		pageList[0].SetActive(true);
-		pageList[11].GetComponent<Text>().text = "Hammer Studio";
+		pageList[10].GetComponent<Text>().text = "Hammer Studio";
 	}
 
 	public void offScreen()
 	{
-		for (int i = 0; i< 9; ++i)
+		for (int i = 0; i< 8; ++i)
 			pageList[i].SetActive(false);
 	}
 
