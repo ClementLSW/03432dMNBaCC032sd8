@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 public class MainScript : MonoBehaviour {
 
@@ -10,7 +14,9 @@ public class MainScript : MonoBehaviour {
 	public Texture back, burger;
 	bool dir = true;
 	byte isService = 0;
-	public GameObject ARCanvas, ARCam;
+	public GameObject ARCanvas, ARCam, submitBtn, alert;
+	public Text title, message;
+	public InputField[] contactUsInput;
 
     // Portfolio page variables
     byte isPortfolio = 0;
@@ -301,5 +307,59 @@ public class MainScript : MonoBehaviour {
 		}
 	}
 
+	public void contactUsSubmit()
+	{
+		foreach (InputField i in contactUsInput)
+        {
+        	if (i.text == "")
+        	{
+				setAlert ("ERROR", "You cannot leave any blanks!");
+				return;
+        	}
+        }
 
+		if (!contactUsInput[1].text.Contains("@") || !contactUsInput[1].text.Contains("."))
+		{
+			setAlert ("ERROR", "Your email is invalid!\nPlease check and then try again!");
+			return;
+		}
+
+		submitBtn.SetActive(false);
+
+		MailMessage mail = new MailMessage();
+ 
+		mail.From = new MailAddress("HammerStudioBot@gmail.com");
+		mail.To.Add("roselanaraf@hammer-studio.com");
+		mail.Subject = contactUsInput[2].text;
+		mail.Body = string.Format("Name: {0}\nEmail: {1}\n\n{2}", contactUsInput[0].text, contactUsInput[1].text, contactUsInput[3].text);
+
+        SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
+        smtpServer.Port = 587;
+		smtpServer.Credentials = new System.Net.NetworkCredential("HammerStudioBot@gmail.com", "HammerStudioBot123") as ICredentialsByHost;
+        smtpServer.EnableSsl = true;
+        ServicePointManager.ServerCertificateValidationCallback = 
+        delegate(object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors){return true; };
+        smtpServer.Send(mail);
+        Debug.Log("success");
+
+        foreach (InputField i in contactUsInput)
+        {
+        	i.text = "";
+        }
+
+		setAlert ("Success!", "Email has been sent!\nPlease await your reply =D");
+		submitBtn.SetActive(true);
+	}
+
+	private void setAlert(string titleInput, string messageInput)
+	{
+		title.text = titleInput;
+		message.text = messageInput;
+		alert.SetActive(true);
+	}
+
+	public void ok()
+	{
+		alert.SetActive(false);
+	}
 }
