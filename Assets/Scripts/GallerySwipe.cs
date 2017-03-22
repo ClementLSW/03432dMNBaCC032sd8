@@ -35,8 +35,16 @@ public class GallerySwipe : MonoBehaviour {
     private int fastScrollDir = -1;
 
     private bool fastScrollEnd = false;
-	
 
+    private float initialYPos = 0;
+
+    public float fastScrollThreshhold = 3000;
+
+    void Start()
+    {
+        initialYPos = galleryImages.transform.localPosition.y;
+    }
+    
 	void Update () 
 	{
 		if(isSwiping)
@@ -64,7 +72,7 @@ public class GallerySwipe : MonoBehaviour {
 
         if(lerpingToNearestGallery)
         {
-            galleryImages.transform.localPosition = Vector3.Lerp(galleryImages.transform.localPosition, new Vector3(0.5f + -currentGalleryImageID * 720f, 0, 0), Time.deltaTime * 5f);
+            galleryImages.transform.localPosition = Vector3.Lerp(galleryImages.transform.localPosition, new Vector3(0.5f + -currentGalleryImageID * 720f, initialYPos, 0), Time.deltaTime * 5f);
         }
 
         // If hit the left most or right most boundary, stop everything
@@ -154,7 +162,7 @@ public class GallerySwipe : MonoBehaviour {
 
         float ratio = distSwiped / timeHeldOnSwipe;
         
-        if(ratio > 3000)
+        if(ratio > fastScrollThreshhold)
         {
             // Scroll through everything
             fastScrollSpeed = ratio;
