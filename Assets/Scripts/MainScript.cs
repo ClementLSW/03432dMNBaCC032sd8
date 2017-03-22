@@ -12,6 +12,140 @@ public class MainScript : MonoBehaviour {
 	byte isService = 0;
 	public GameObject ARCanvas, ARCam;
 
+    // Portfolio page variables
+    byte isPortfolio = 0;
+    byte nextPortfolioImageIndex = 0;
+    byte currentPortfolioImageIndex = 0;
+    public float portfolioGallerySwipeSpeed = 5;
+
+    public GameObject portfolioObj;
+    public ScrollRect portfolioScrollRect;
+
+    Vector2 initialTouchPosition;
+
+    public void Update()
+    {
+        if (isPortfolio == 1)
+        {
+            GetTouchInput();
+
+            GetMouseInput();
+
+            if(nextPortfolioImageIndex != currentPortfolioImageIndex)
+            {
+                StartCoroutine(Swipe(currentPortfolioImageIndex));
+
+                currentPortfolioImageIndex = nextPortfolioImageIndex;
+            }
+        }
+    }
+
+    IEnumerator Swipe (byte currentImageIndex)
+    {
+        isPortfolio = 0;
+        portfolioScrollRect.vertical = false;
+        portfolioScrollRect.velocity = Vector2.zero;
+
+        Vector3 targetPos = portfolioObj.transform.localPosition;
+
+        // Swipe left
+        if (nextPortfolioImageIndex > currentImageIndex)
+        {
+            targetPos -= Vector3.right * 720f;
+        }
+        else if(nextPortfolioImageIndex < currentImageIndex)// Swipe right
+        {
+            targetPos += Vector3.right * 720f;
+        }
+
+        float distance = 720;
+
+        while(distance > 1)
+        {
+            portfolioObj.transform.localPosition = Vector3.MoveTowards(portfolioObj.transform.localPosition, targetPos, portfolioGallerySwipeSpeed * Time.deltaTime);
+
+            distance = Vector3.Distance(portfolioObj.transform.localPosition, targetPos);
+            yield return null;
+        }
+
+        portfolioScrollRect.vertical = true;
+        isPortfolio = 1;
+    }
+
+    public void GetTouchInput()
+    {
+        if (Input.touches.Length > 0)
+        {
+            Touch t = Input.GetTouch(0);
+            if (t.phase == TouchPhase.Began)
+            {
+                //save began touch 2d point
+                initialTouchPosition = new Vector2(t.position.x, t.position.y);
+                portfolioScrollRect.vertical = false;
+                portfolioScrollRect.velocity = Vector2.zero;
+            }
+            if (t.phase == TouchPhase.Ended)
+            {
+                //save ended touch 2d point
+                Vector2 endedTouchPosition = new Vector2(t.position.x, t.position.y);
+
+                //create vector from the two points
+                Vector2 currentSwipe = new Vector3(endedTouchPosition.x - initialTouchPosition.x, endedTouchPosition.y - initialTouchPosition.y);
+
+                //normalize the 2d vector
+                currentSwipe.Normalize();
+                
+                //swipe left
+                if (currentSwipe.x < 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f)
+                {
+                    ++nextPortfolioImageIndex;
+                }
+                //swipe right
+                if (currentSwipe.x > 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f)
+                {
+                    if (currentPortfolioImageIndex > 0)
+                    {
+                        --nextPortfolioImageIndex;
+                    }
+                }
+            }
+        }
+    }
+
+    public void GetMouseInput()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            //save began touch 2d point
+            initialTouchPosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            //save ended touch 2d point
+            Vector2 endedTouchPosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+
+            //create vector from the two points
+            Vector2 currentSwipe = new Vector2(endedTouchPosition.x - initialTouchPosition.x, endedTouchPosition.y - initialTouchPosition.y);
+
+            //normalize the 2d vector
+            currentSwipe.Normalize();
+            
+            //swipe left
+            if (currentSwipe.x < 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f)
+            {
+                ++nextPortfolioImageIndex;
+            }
+            //swipe right
+            if (currentSwipe.x > 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f)
+            {
+                if (currentPortfolioImageIndex > 0)
+                {
+                    --nextPortfolioImageIndex;
+                }
+            }
+        }
+    }
+
     public void navigationSlide()
 	{
 		if (isService > 1)
@@ -77,6 +211,15 @@ public class MainScript : MonoBehaviour {
 			break;
 		}
 		navigationSlide();
+
+        if(pageNo != 2)
+        {
+            isPortfolio = 0;
+        }
+        else
+        {
+            isPortfolio = 1;
+        }
 	}
 
 	public void changeServicesPage (int pageNo)
