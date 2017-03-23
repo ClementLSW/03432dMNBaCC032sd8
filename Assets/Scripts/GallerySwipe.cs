@@ -40,6 +40,23 @@ public class GallerySwipe : MonoBehaviour {
 
     public float fastScrollThreshhold = 3000;
 
+    public enum GALLERY_MODE
+    {
+        AUTO,
+        MANUAL,
+        MAX_MODE
+    }
+
+    GALLERY_MODE mode = GALLERY_MODE.AUTO;
+
+    float modeTimer = 0;
+
+    bool autoStop = false;
+
+    float stopTimer = 0;
+
+    public float autoGlanceDuration = 3;
+
     void Start()
     {
         initialYPos = galleryImages.transform.localPosition.y;
@@ -47,62 +64,108 @@ public class GallerySwipe : MonoBehaviour {
     
 	void Update () 
 	{
-		if(isSwiping)
+        if (mode == GALLERY_MODE.AUTO)
         {
-            timeHeldOnSwipe += Time.deltaTime;
-
-            // Check whether user is swiping elft or right
-            Vector3 dir = Input.mousePosition - swipeLastPos;
-
-            // If swiped right
-            if(dir.x > 0)
+            if (!autoStop)
             {
-                galleryImages.transform.Translate(swipeSpeed * Time.deltaTime, 0, 0);
+                galleryImages.transform.localPosition = Vector3.Lerp(galleryImages.transform.localPosition, new Vector3(0.5f + -currentGalleryImageID * 720f, initialYPos, 0), Time.deltaTime * 5f);
+
+                if (Mathf.Abs(galleryImages.transform.localPosition.x - -currentGalleryImageID * 720f) < 3)
+                {
+                    autoStop = true;
+                }
             }
-            else if(dir.x < 0)// else if swiped left
+            else
             {
-                galleryImages.transform.Translate(-swipeSpeed * Time.deltaTime, 0, 0);
+                // Stay still for awhile and move on
+                stopTimer += Time.deltaTime;
+                if(stopTimer >= autoGlanceDuration)
+                {
+                    autoStop = false;
+                    stopTimer = 0;
+                    ++currentGalleryImageID;
+                    
+                    if(currentGalleryImageID > 4)
+                    {
+                        currentGalleryImageID = 0;
+                    }
+
+                    for (int i = 0; i < galleryCircles.Length; i++)
+                    {
+                        galleryCircles[i].color = new Color(1, 1, 1, 0.25f);
+                    }
+
+                    galleryCircles[currentGalleryImageID].color = Color.white;
+                }
             }
-
-            swipeLastPos = Input.mousePosition;
-
-            // Calculate current gallery image ID
-            CalculateGalleryIndex();
         }
-
-        if(lerpingToNearestGallery)
+        else
         {
-            galleryImages.transform.localPosition = Vector3.Lerp(galleryImages.transform.localPosition, new Vector3(0.5f + -currentGalleryImageID * 720f, initialYPos, 0), Time.deltaTime * 5f);
-        }
-
-        // If hit the left most or right most boundary, stop everything
-        if (isSwiping || fastScroll)
-        {
-            CheckGalleryBoundaries();
-
-            for(int i = 0; i < galleryCircles.Length; i++)
+            if (isSwiping)
             {
-                galleryCircles[i].color = new Color(1, 1, 1, 0.25f);
+                timeHeldOnSwipe += Time.deltaTime;
+
+                // Check whether user is swiping elft or right
+                Vector3 dir = Input.mousePosition - swipeLastPos;
+
+                // If swiped right
+                if (dir.x > 0)
+                {
+                    galleryImages.transform.Translate(swipeSpeed * Time.deltaTime, 0, 0);
+                }
+                else if (dir.x < 0)// else if swiped left
+                {
+                    galleryImages.transform.Translate(-swipeSpeed * Time.deltaTime, 0, 0);
+                }
+
+                swipeLastPos = Input.mousePosition;
+
+                // Calculate current gallery image ID
+                CalculateGalleryIndex();
             }
 
-            galleryCircles[currentGalleryImageID].color = Color.white;
-        }
+            if (lerpingToNearestGallery)
+            {
+                galleryImages.transform.localPosition = Vector3.Lerp(galleryImages.transform.localPosition, new Vector3(0.5f + -currentGalleryImageID * 720f, initialYPos, 0), Time.deltaTime * 5f);
+            }
 
-        if (fastScroll)
-        {
-            galleryImages.transform.Translate(fastScrollSpeed * (float)fastScrollDir * Time.deltaTime, 0, 0);
-
-            // Reduce fast scroll speed
-            fastScrollSpeed *= 0.98f;
-
-            CalculateGalleryIndex();
-
-            if (fastScrollEnd)
+            // If hit the left most or right most boundary, stop everything
+            if (isSwiping || fastScroll)
             {
                 CheckGalleryBoundaries();
-                LerpToNearestGallery();
-                fastScroll = false;
-                fastScrollEnd = false;
+
+                for (int i = 0; i < galleryCircles.Length; i++)
+                {
+                    galleryCircles[i].color = new Color(1, 1, 1, 0.25f);
+                }
+
+                galleryCircles[currentGalleryImageID].color = Color.white;
+            }
+
+            if (fastScroll)
+            {
+                galleryImages.transform.Translate(fastScrollSpeed * (float)fastScrollDir * Time.deltaTime, 0, 0);
+
+                // Reduce fast scroll speed
+                fastScrollSpeed *= 0.98f;
+
+                CalculateGalleryIndex();
+
+                if (fastScrollEnd)
+                {
+                    CheckGalleryBoundaries();
+                    LerpToNearestGallery();
+                    fastScroll = false;
+                    fastScrollEnd = false;
+                }
+            }
+
+            modeTimer += Time.deltaTime;
+
+            if(modeTimer >= 3 && !fastScroll && !isSwiping)
+            {
+                mode = GALLERY_MODE.AUTO;
+                modeTimer = 0;
             }
         }
 	}
@@ -148,8 +211,11 @@ public class GallerySwipe : MonoBehaviour {
         isSwiping = true;
         lerpingToNearestGallery = false;
         fastScroll = false;
+        stopTimer = 0;
+        modeTimer = 0;
+        autoStop = false;
 
-        Debug.Log("A");
+        mode = GALLERY_MODE.MANUAL;
     }
 
     public void endGallerySwipe()
