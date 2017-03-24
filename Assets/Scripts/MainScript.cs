@@ -29,48 +29,125 @@ public class MainScript : MonoBehaviour {
 
     Vector2 initialTouchPosition;
 
+    // Variables for auto mode
+    public enum GALLERY_MODE
+    {
+        AUTO,
+        MANUAL,
+        MAX_MODE
+    }
+
+    GALLERY_MODE mode = GALLERY_MODE.AUTO;
+
+    float modeTimer = 0;
+
+    bool autoStop = false;
+
+    float stopTimer = 0;
+
+    public float autoGlanceDuration = 3;
+
+    Vector3 portfolioGalleryOriginalPos;
+
+    public void Start()
+    {
+        portfolioGalleryOriginalPos = portfolioObj.transform.localPosition;
+    }
+
     public void Update()
     {
-        if (isPortfolio == 1)
+        GetTouchInput();
+
+        GetMouseInput();
+
+        if (mode == GALLERY_MODE.MANUAL)
         {
-            GetTouchInput();
-
-            GetMouseInput();
-
-            if(nextPortfolioImageIndex != currentPortfolioImageIndex)
+            if (nextPortfolioImageIndex != currentPortfolioImageIndex)
             {
                 StartCoroutine(Swipe(currentPortfolioImageIndex));
 
                 currentPortfolioImageIndex = nextPortfolioImageIndex;
+            }
+            else // if user is looking at the same screen for more than x seconds, switch to auto mode
+            {
+                modeTimer += Time.deltaTime;
+                if (modeTimer >= 3)
+                {
+                    mode = GALLERY_MODE.AUTO;
+                    isPortfolio = 0;
+                    modeTimer = 0;
+                }
+            }
+
+        }
+        else
+        {
+            stopTimer += Time.deltaTime;
+            if (stopTimer >= autoGlanceDuration)
+            {
+                if(nextPortfolioImageIndex + 1 > 4)
+                {
+                    nextPortfolioImageIndex = 0;
+                }
+                else
+                {
+                    nextPortfolioImageIndex += 1;
+                }
+                StartCoroutine(Swipe(currentPortfolioImageIndex));
+
+                currentPortfolioImageIndex = nextPortfolioImageIndex;
+
+                stopTimer = 0;
             }
         }
     }
 
     IEnumerator Swipe (byte currentImageIndex)
     {
+        modeTimer = 0;
+        stopTimer = 0;
         isPortfolio = 0;
         portfolioScrollRect.vertical = false;
         portfolioScrollRect.velocity = Vector2.zero;
 
         Vector3 targetPos = portfolioObj.transform.localPosition;
 
+        float speedToMoveAt = portfolioGallerySwipeSpeed;
+        
         // Swipe left
         if (nextPortfolioImageIndex > currentImageIndex)
         {
-            targetPos -= Vector3.right * 720f;
+            //targetPos -= Vector3.right * 720f;
+            targetPos = new Vector3((-nextPortfolioImageIndex * 720f) + portfolioGalleryOriginalPos.x, portfolioGalleryOriginalPos.y, portfolioGalleryOriginalPos.z);
         }
         else if(nextPortfolioImageIndex < currentImageIndex)// Swipe right
         {
-            targetPos += Vector3.right * 720f;
+            //targetPos += Vector3.right * 720f;
+            targetPos = new Vector3((-nextPortfolioImageIndex * 720f) + portfolioGalleryOriginalPos.x, portfolioGalleryOriginalPos.y, portfolioGalleryOriginalPos.z);
+            Debug.Log(targetPos);
+        }
+
+        if(currentImageIndex == 4 && nextPortfolioImageIndex == 0)
+        {
+            targetPos = portfolioGalleryOriginalPos;
+            speedToMoveAt = 5000;
         }
 
         float distance = 720;
 
+        GALLERY_MODE modeThatStartedSwipe = mode;
+
         while(distance > 1)
         {
-            portfolioObj.transform.localPosition = Vector3.MoveTowards(portfolioObj.transform.localPosition, targetPos, portfolioGallerySwipeSpeed * Time.deltaTime);
+            portfolioObj.transform.localPosition = Vector3.MoveTowards(portfolioObj.transform.localPosition, targetPos, speedToMoveAt * Time.deltaTime);
 
             distance = Vector3.Distance(portfolioObj.transform.localPosition, targetPos);
+            
+            if(modeThatStartedSwipe != mode)
+            {
+                break;
+            }
+
             yield return null;
         }
 
@@ -89,6 +166,7 @@ public class MainScript : MonoBehaviour {
                 initialTouchPosition = new Vector2(t.position.x, t.position.y);
                 portfolioScrollRect.vertical = false;
                 portfolioScrollRect.velocity = Vector2.zero;
+                mode = GALLERY_MODE.MANUAL;
             }
             if (t.phase == TouchPhase.Ended)
             {
@@ -105,6 +183,10 @@ public class MainScript : MonoBehaviour {
                 if (currentSwipe.x < 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f)
                 {
                     ++nextPortfolioImageIndex;
+                    if(nextPortfolioImageIndex > 4)
+                    {
+                        nextPortfolioImageIndex = 4;
+                    }
                 }
                 //swipe right
                 if (currentSwipe.x > 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f)
@@ -124,6 +206,7 @@ public class MainScript : MonoBehaviour {
         {
             //save began touch 2d point
             initialTouchPosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            mode = GALLERY_MODE.MANUAL;
         }
         if (Input.GetMouseButtonUp(0))
         {
@@ -140,6 +223,10 @@ public class MainScript : MonoBehaviour {
             if (currentSwipe.x < 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f)
             {
                 ++nextPortfolioImageIndex;
+                if (nextPortfolioImageIndex > 4)
+                {
+                    nextPortfolioImageIndex = 4;
+                }
             }
             //swipe right
             if (currentSwipe.x > 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f)
