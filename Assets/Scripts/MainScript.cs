@@ -118,12 +118,12 @@ public class MainScript : MonoBehaviour {
         if (nextPortfolioImageIndex > currentImageIndex)
         {
             //targetPos -= Vector3.right * 720f;
-            targetPos = new Vector3((-nextPortfolioImageIndex * 720f) + portfolioGalleryOriginalPos.x, portfolioGalleryOriginalPos.y, portfolioGalleryOriginalPos.z);
+			targetPos = new Vector3((-nextPortfolioImageIndex * 720f) + portfolioGalleryOriginalPos.x, portfolioObj.transform.localPosition.y, portfolioGalleryOriginalPos.z);
         }
         else if(nextPortfolioImageIndex < currentImageIndex)// Swipe right
         {
             //targetPos += Vector3.right * 720f;
-            targetPos = new Vector3((-nextPortfolioImageIndex * 720f) + portfolioGalleryOriginalPos.x, portfolioGalleryOriginalPos.y, portfolioGalleryOriginalPos.z);
+			targetPos = new Vector3((-nextPortfolioImageIndex * 720f) + portfolioGalleryOriginalPos.x, portfolioObj.transform.localPosition.y, portfolioGalleryOriginalPos.z);
             Debug.Log(targetPos);
         }
 
