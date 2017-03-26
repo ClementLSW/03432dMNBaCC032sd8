@@ -14,7 +14,7 @@ public class MainScript : MonoBehaviour {
 	public Texture back, burger;
 	bool dir = true;
 	byte isService = 0;
-	public GameObject ARCanvas, ARCam, submitBtn, alert;
+	public GameObject ARCanvas, ARCam, submitBtn, alert, VRCanvas;
 	public Text title, message;
 	public InputField[] contactUsInput;
 
@@ -389,7 +389,9 @@ public class MainScript : MonoBehaviour {
 			ARCam.SetActive(true);
 		break;
 		case 5:
-			Application.OpenURL("https://www.youtube.com");
+			VRCanvas.SetActive(true);
+			gameObject.SetActive(false);
+			VRCanvas.GetComponent<ARHandler>().startMovie();
 		break;
 		}
 	}
