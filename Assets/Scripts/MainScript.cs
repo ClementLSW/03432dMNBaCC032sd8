@@ -389,8 +389,6 @@ public class MainScript : MonoBehaviour {
 			ARCam.SetActive(true);
 		break;
 		case 5:
-			VRCanvas.SetActive(true);
-			gameObject.SetActive(false);
 			VRCanvas.GetComponent<ARHandler>().startMovie();
 		break;
 		}
