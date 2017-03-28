@@ -14,9 +14,10 @@ public class MainScript : MonoBehaviour {
 	public Texture back, burger;
 	bool dir = true;
 	byte isService = 0;
-	public GameObject ARCanvas, ARCam, submitBtn, alert, VRCanvas;
+	public GameObject ARCanvas, ARCam, submitBtn, alert, viewMoreList, picDisplay, imageDisplay;
 	public Text title, message;
 	public InputField[] contactUsInput;
+	public Texture[] displayImages;
 
     // Portfolio page variables
     byte isPortfolio = 0;
@@ -375,7 +376,7 @@ public class MainScript : MonoBehaviour {
 			Application.OpenURL("https://www.facebook.com/hammer1studio/");
 		break;
 		case 1:
-			Application.OpenURL("");
+			Application.OpenURL("https://www.youtube.com/channel/UC_CBq8I6S2agegl8FO_5-mg");
 		break;
 		case 2:
 			Application.OpenURL("https://www.instagram.com/hammerstudio.media/");
@@ -389,7 +390,7 @@ public class MainScript : MonoBehaviour {
 			ARCam.SetActive(true);
 		break;
 		case 5:
-			VRCanvas.GetComponent<ARHandler>().startMovie();
+			Application.OpenURL("https://www.youtube.com/watch?v=K6vAYWeGVYE");
 		break;
 		}
 	}
@@ -448,5 +449,27 @@ public class MainScript : MonoBehaviour {
 	public void ok()
 	{
 		alert.SetActive(false);
+	}
+
+	public void viewMore()
+	{
+		viewMoreList.SetActive(true);
+	}
+
+	public void viewMoreBack()
+	{
+		viewMoreList.SetActive(false);
+	}
+
+	public void displayPicture(int cmd)
+	{
+		if (cmd == -1)
+		{
+			picDisplay.SetActive(false);
+			return;
+		}
+		picDisplay.SetActive(true);
+		imageDisplay.GetComponent<RawImage>().texture = displayImages[cmd];
+
 	}
 }
