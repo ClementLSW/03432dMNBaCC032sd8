@@ -57,6 +57,8 @@ public class GallerySwipe : MonoBehaviour {
 
     public float autoGlanceDuration = 3;
 
+    public MainScript mainScript;   // reference to main script
+
     void Start()
     {
         initialYPos = galleryImages.transform.localPosition.y;
@@ -64,6 +66,8 @@ public class GallerySwipe : MonoBehaviour {
     
 	void Update () 
 	{
+
+
         if (mode == GALLERY_MODE.AUTO)
         {
             if (!autoStop)
