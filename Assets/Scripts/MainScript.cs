@@ -12,26 +12,23 @@ public class MainScript : MonoBehaviour {
 	public GameObject[] pageList;
 	public AnimationClip slideIn, slideOut;
 	public Texture back, burger;
-	bool dir = true;
+	bool dir = true, isViewMore = false; 
+	public bool isPortfolio = false;
 	byte isService = 0;
 	public GameObject ARCanvas, ARCam, submitBtn, alert, viewMoreList, picDisplay, imageDisplay;
 	public Text title, message;
 	public InputField[] contactUsInput;
 	public Texture[] displayImages;
-
-    public bool isPortfolio = false;
-
-    public void Start()
-    {
-    }
-
-    public void Update()
-    {
-        
-    }
    
     public void navigationSlide()
 	{
+		if (isViewMore)
+		{
+			viewMoreList.SetActive(false);
+			isViewMore = false;
+			Screen.orientation = ScreenOrientation.Landscape;
+			return;
+		}
 		if (isService > 1)
 		{
 			if (isService == 2)
@@ -243,12 +240,9 @@ public class MainScript : MonoBehaviour {
 
 	public void viewMore()
 	{
+		Screen.orientation = ScreenOrientation.AutoRotation;
 		viewMoreList.SetActive(true);
-	}
-
-	public void viewMoreBack()
-	{
-		viewMoreList.SetActive(false);
+		isViewMore = true;
 	}
 
 	public void displayPicture(int cmd)
