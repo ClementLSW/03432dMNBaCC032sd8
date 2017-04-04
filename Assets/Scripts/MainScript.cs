@@ -25,8 +25,9 @@ public class MainScript : MonoBehaviour {
 		if (isViewMore)
 		{
 			viewMoreList.SetActive(false);
+			picDisplay.SetActive(false);
 			isViewMore = false;
-			Screen.orientation = ScreenOrientation.Landscape;
+			Screen.orientation = ScreenOrientation.Portrait;
 			return;
 		}
 		if (isService > 1)
