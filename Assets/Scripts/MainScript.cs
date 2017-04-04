@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using Vuforia;
 
 public class MainScript : MonoBehaviour {
 
@@ -20,6 +21,10 @@ public class MainScript : MonoBehaviour {
 	public InputField[] contactUsInput;
 	public Texture[] displayImages;
 
+	void Start()
+	{
+		CameraDevice.Instance.SetFocusMode(CameraDevice.FocusMode.FOCUS_MODE_CONTINUOUSAUTO);
+	}
 
 	void Update()
 	{
@@ -30,6 +35,7 @@ public class MainScript : MonoBehaviour {
 	{
 		if (isViewMore)
 		{
+			pageList[9].SetActive(true);
 			viewMoreList.SetActive(false);
 			picDisplay.SetActive(false);
 			isViewMore = false;
@@ -249,6 +255,7 @@ public class MainScript : MonoBehaviour {
 	{
 		Screen.orientation = ScreenOrientation.AutoRotation;
 		viewMoreList.SetActive(true);
+		pageList[9].SetActive(false);
 		isViewMore = true;
 	}
 
@@ -264,6 +271,6 @@ public class MainScript : MonoBehaviour {
 		if (cmd == 15)
 			imageDisplay.GetComponent<RectTransform>().sizeDelta = new Vector2(712, 712);
 		else
-			imageDisplay.GetComponent<RectTransform>().sizeDelta = new Vector2(712, 388);
+			imageDisplay.GetComponent<RectTransform>().sizeDelta = new Vector2(644, 360);
 	}
 }
