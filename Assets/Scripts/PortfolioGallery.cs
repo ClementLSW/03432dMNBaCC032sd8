@@ -80,7 +80,7 @@ public class PortfolioGallery : MonoBehaviour {
             stopTimer += Time.deltaTime;
             if (stopTimer >= stopDuration)
             {
-				if (nextPortfolioImageIndex + 1 > transform.childCount-1)
+				if (nextPortfolioImageIndex + 1 > 4)
                 {
                     nextPortfolioImageIndex = 0;
                 }
@@ -139,9 +139,9 @@ public class PortfolioGallery : MonoBehaviour {
                 if (currentSwipe.x < 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f)
                 {
                     ++nextPortfolioImageIndex;
-					if (nextPortfolioImageIndex > transform.childCount)
+					if (nextPortfolioImageIndex > 4)
                     {
-						nextPortfolioImageIndex = (byte)transform.childCount;
+						nextPortfolioImageIndex = 4;
                     }
                 }
                 //swipe right
@@ -199,9 +199,9 @@ public class PortfolioGallery : MonoBehaviour {
             if (currentSwipe.x < 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f)
             {
                 ++nextPortfolioImageIndex;
-				if (nextPortfolioImageIndex > transform.childCount)
+				if (nextPortfolioImageIndex > 4)
                 {
-					nextPortfolioImageIndex = (byte)transform.childCount;
+					nextPortfolioImageIndex = 4;
                 }
             }
             //swipe right
@@ -236,7 +236,7 @@ public class PortfolioGallery : MonoBehaviour {
             targetPos = new Vector3((-nextPortfolioImageIndex * 720f) + portfolioGalleryOriginalPos.x, transform.localPosition.y, portfolioGalleryOriginalPos.z);
         }
 
-		if (mode == GALLERY_MODE.AUTO && currentImageIndex == transform.childCount-1 && nextPortfolioImageIndex == 0)
+		if (mode == GALLERY_MODE.AUTO && currentImageIndex == 4 && nextPortfolioImageIndex == 0)
         {
             targetPos = portfolioGalleryOriginalPos;
             speedToMoveAt = 5000;
