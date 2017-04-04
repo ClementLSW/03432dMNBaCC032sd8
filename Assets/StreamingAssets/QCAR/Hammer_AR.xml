@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
   <Tracking>
+    <ImageTarget name="fern" size="359.000000 191.000000" />
     <ImageTarget name="Logo" size="340.000000 192.000000" />
+    <ImageTarget name="table" size="797.000000 563.000000" />
+    <ImageTarget name="stoneWall" size="1920.000000 1440.000000" />
+    <ImageTarget name="screw" size="600.000000 600.000000" />
+    <ImageTarget name="bulb" size="759.000000 1080.000000" />
   </Tracking>
 </QCARConfig>
