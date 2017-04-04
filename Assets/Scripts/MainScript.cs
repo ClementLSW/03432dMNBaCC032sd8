@@ -19,7 +19,13 @@ public class MainScript : MonoBehaviour {
 	public Text title, message;
 	public InputField[] contactUsInput;
 	public Texture[] displayImages;
-   
+
+
+	void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Escape)) navigationSlide();
+	}
+
     public void navigationSlide()
 	{
 		if (isViewMore)
