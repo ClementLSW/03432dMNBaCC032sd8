@@ -255,6 +255,9 @@ public class MainScript : MonoBehaviour {
 		}
 		picDisplay.SetActive(true);
 		imageDisplay.GetComponent<RawImage>().texture = displayImages[cmd];
-
+		if (cmd == 15)
+			imageDisplay.GetComponent<RectTransform>().sizeDelta = new Vector2(712, 712);
+		else
+			imageDisplay.GetComponent<RectTransform>().sizeDelta = new Vector2(712, 388);
 	}
 }
