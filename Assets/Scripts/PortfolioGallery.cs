@@ -54,7 +54,7 @@ public class PortfolioGallery : MonoBehaviour {
 
         GetMouseInput();
 
-        GetTouchInput();
+        //GetTouchInput();
 
         if (mode == GALLERY_MODE.MANUAL)
         {
