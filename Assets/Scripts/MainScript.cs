@@ -13,7 +13,7 @@ public class MainScript : MonoBehaviour {
 	public GameObject[] pageList;
 	public AnimationClip slideIn, slideOut;
 	public Texture back, burger;
-	bool dir = true, isViewMore = false; 
+	bool dir = true, isViewImage = false, isViewMore = false; 
 	public bool isPortfolio = false;
 	byte isService = 0;
 	public GameObject ARCanvas, ARCam, submitBtn, alert, viewMoreList, picDisplay, imageDisplay;
@@ -23,7 +23,7 @@ public class MainScript : MonoBehaviour {
 
 	void Start()
 	{
-		CameraDevice.Instance.SetFocusMode(CameraDevice.FocusMode.FOCUS_MODE_CONTINUOUSAUTO);
+		CameraDevice.Instance.SetFocusMode(CameraDevice.FocusMode.FOCUS_MODE_MACRO);
 	}
 
 	void Update()
@@ -33,13 +33,21 @@ public class MainScript : MonoBehaviour {
 
     public void navigationSlide()
 	{
-		if (isViewMore)
+		if (isViewImage)
 		{
 			pageList[9].SetActive(true);
 			viewMoreList.SetActive(false);
 			picDisplay.SetActive(false);
-			isViewMore = false;
+			isViewImage = false;
 			Screen.orientation = ScreenOrientation.Portrait;
+			return;
+		}
+		if (isViewMore)
+		{
+			viewMoreList.SetActive(false);
+			isViewMore = false;
+			pageList[13].SetActive(false);
+			pageList[12].GetComponent<UnityEngine.UI.Image>().color = new Color(0, 0, 0, 0.82f);
 			return;
 		}
 		if (isService > 1)
@@ -157,6 +165,20 @@ public class MainScript : MonoBehaviour {
 			pageList[5].GetComponent<Animator> ().Play ("Navigation Slide In");
 		isService = 0;
 		pageList[11].GetComponent<RawImage>().texture = burger;
+		if (isViewImage)
+		{
+			pageList[9].SetActive(true);
+			viewMoreList.SetActive(false);
+			picDisplay.SetActive(false);
+			isViewImage = false;
+			Screen.orientation = ScreenOrientation.Portrait;
+		}
+		if (isViewMore)
+		{
+			viewMoreList.SetActive(false);
+			pageList[12].GetComponent<UnityEngine.UI.Image>().color = new Color(0, 0, 0, 0.82f);
+			isViewMore = false;
+		}
 	}
 
 	private void offScreen()
@@ -190,8 +212,21 @@ public class MainScript : MonoBehaviour {
 			ARCam.SetActive(true);
 		break;
 		case 5:
-			Application.OpenURL("https://www.youtube.com/watch?v=K6vAYWeGVYE");
+			Application.OpenURL("https://www.tukushimacorporation.com/");
 		break;
+		case 6:
+			Application.OpenURL("http://www.fukushimayacorporation.com/");
+		break;
+		case 7:
+			Application.OpenURL("https://www.raseultrade.com/");
+		break;
+		case 8:
+			Application.OpenURL("http://takasinocorporation.com/");
+			break;
+		case 9:
+			Application.OpenURL("https://www.raseulgroup.com/");
+		break;
+
 		}
 	}
 
@@ -253,9 +288,14 @@ public class MainScript : MonoBehaviour {
 
 	public void viewMore()
 	{
-		Screen.orientation = ScreenOrientation.AutoRotation;
 		viewMoreList.SetActive(true);
-		pageList[9].SetActive(false);
+		pageList[12].GetComponent<UnityEngine.UI.Image>().color = new Color(0, 0, 0, 1);
+		isViewMore = true;
+	}
+
+	public void viewMoreWeb()
+	{
+		pageList[13].SetActive(true);
 		isViewMore = true;
 	}
 
@@ -272,5 +312,8 @@ public class MainScript : MonoBehaviour {
 			imageDisplay.GetComponent<RectTransform>().sizeDelta = new Vector2(712, 712);
 		else
 			imageDisplay.GetComponent<RectTransform>().sizeDelta = new Vector2(644, 360);
+		Screen.orientation = ScreenOrientation.AutoRotation;
+		pageList[9].SetActive(false);
+		isViewImage = true;
 	}
 }
