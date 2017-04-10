@@ -36,7 +36,7 @@ public class MainScript : MonoBehaviour {
 		if (isViewImage)
 		{
 			pageList[9].SetActive(true);
-			viewMoreList.SetActive(false);
+			viewMoreList.SetActive(true);
 			picDisplay.SetActive(false);
 			isViewImage = false;
 			Screen.orientation = ScreenOrientation.Portrait;
@@ -296,6 +296,7 @@ public class MainScript : MonoBehaviour {
 	public void viewMoreWeb()
 	{
 		pageList[13].SetActive(true);
+		pageList[12].GetComponent<UnityEngine.UI.Image>().color = new Color(0, 0, 0, 1);
 		isViewMore = true;
 	}
 
@@ -304,6 +305,8 @@ public class MainScript : MonoBehaviour {
 		if (cmd == -1)
 		{
 			picDisplay.SetActive(false);
+			pageList[9].SetActive(true);
+			isViewImage = false;
 			return;
 		}
 		picDisplay.SetActive(true);
