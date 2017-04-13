@@ -23,6 +23,7 @@ public class MainScript : MonoBehaviour {
 
 	void Start()
 	{
+		Handheld.PlayFullScreenMovie ("splash.mp4", Color.black, FullScreenMovieControlMode.CancelOnInput);
 		CameraDevice.Instance.SetFocusMode(CameraDevice.FocusMode.FOCUS_MODE_MACRO);
 	}
 
