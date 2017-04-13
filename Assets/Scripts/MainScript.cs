@@ -307,6 +307,7 @@ public class MainScript : MonoBehaviour {
 			picDisplay.SetActive(false);
 			pageList[9].SetActive(true);
 			isViewImage = false;
+			Screen.orientation = ScreenOrientation.Portrait;
 			return;
 		}
 		picDisplay.SetActive(true);
